@@ -57,9 +57,18 @@ class Ui(
         else (if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.REJECT else HapticFeedbackConstants.LONG_PRESS)
         act.window.decorView.performHapticFeedback(c)
     }
-    private fun say(m: String) { scope.launch { snack.currentSnackbarData?.dismiss(); snack.showSnackbar(m) } }
-    fun ok(m: String) { buzz(true); flash++; say("✓  $m") }
-    fun err(m: String) { buzz(false); say("✗  $m") }
+    private var snackJob: Job? = null
+    private fun say(m: String, ms: Long) {
+        snackJob?.cancel()
+        snackJob = scope.launch {
+            snack.currentSnackbarData?.dismiss()
+            val j = launch { snack.showSnackbar(m, duration = SnackbarDuration.Indefinite) }
+            delay(ms)
+            j.cancel()
+        }
+    }
+    fun ok(m: String) { buzz(true); flash++; say("✓  $m", 1200L) }
+    fun err(m: String) { buzz(false); say("✗  $m", 1800L) }
 
     /** Runs [block] in the background, then shows a clear success or error message. */
     fun work(okMsg: String, done: () -> Unit = {}, fail: () -> Unit = {}, block: () -> Unit) {
