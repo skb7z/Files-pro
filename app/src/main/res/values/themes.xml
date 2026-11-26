@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.FilesPro" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#EAF4FE</item>
+        <item name="android:statusBarColor">#EAF4FE</item>
+        <item name="android:navigationBarColor">#EAF4FE</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>
